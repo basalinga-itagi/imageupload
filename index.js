@@ -9,7 +9,7 @@ const upload = multer({ dest: "uploads/" });
 //   res.send("uploading images while post");
 // });
 
-//uploading multiple images
+//uploading multiple image
 app.post("/upload", upload.array("file"), (req, res) => {});
 app.listen(8080, () => {
   console.log("listening on port 80880");
