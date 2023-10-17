@@ -64,10 +64,13 @@ const upload = multer({ storage });
 
 //uploading multiple images
 app.post("/upload", upload.array("file"), async (req, res) => {
-  const files = req.files[0];
-  // console.log("files", files);
+  //uploading single image;
+  // const files = req.files[0];
+
+  //upoading multiple image
+  const files = req.files;
+
   const result = await uploadImage(files);
-  // console.log("result", req.file.location);
   res.json({ imageUrl: result });
 });
 

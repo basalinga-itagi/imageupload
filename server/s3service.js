@@ -22,11 +22,26 @@ export const uploadImage = async (file) => {
     secreatAccessKey,
   });
 
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: file.originalname,
-    Body: file.buffer,
-  };
-  const result = await s3.upload(params).promise();
-  return result;
+  //uploading single image
+
+  // const params = {
+  //   Bucket: process.env.AWS_BUCKET_NAME,
+  //   Key: file.originalname,
+  //   Body: file.buffer,
+  // };
+  // const result = await s3.upload(params).promise();
+  // return result;
+
+  //uploading multipe image
+  const params = file.map((curFile, index) => {
+    return {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: curFile.originalname,
+      Body: curFile.buffer,
+    };
+  });
+  const results = Promise.all(
+    params.map((param) => s3.upload(param).promise())
+  );
+  return results;
 };
