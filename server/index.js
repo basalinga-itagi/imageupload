@@ -66,12 +66,34 @@ const upload = multer({ storage });
 app.post("/upload", upload.array("file"), async (req, res) => {
   //uploading single image;
   // const files = req.files[0];
-
+  console.log("Uploading", req.files);
   //upoading multiple image
   const files = req.files;
 
   const result = await uploadImage(files);
   res.json({ imageUrl: result });
+});
+
+app.get("/images/:key", (req, res) => {
+  const key = req.params.key;
+
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: key,
+  };
+
+  // s3.getObject(params, (err, data) => {
+  //   if (err) {
+  //     console.error("Error getting S3 object:", err);
+  //     return res.status(500).send("Error retrieving image from S3");
+  //   }
+
+  //   res.set("Content-Type", data.ContentType);
+  //   res.send(data.Body);
+  // });
+
+  const readStream = s3.getObject(params).createReadStream();
+  readStream.pipe(res);
 });
 
 // Error handling middleware
